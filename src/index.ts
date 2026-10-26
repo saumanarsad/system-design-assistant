@@ -10,8 +10,13 @@ async function main() {
         model: "gpt-4o-mini",
         messages: [
           {
+            role: "system",
+            content:
+              "You are a senior backend engineer. Answer in plain language, max 3 sentences.",
+          },
+          {
             role: "user",
-            content: "Explain DB sharding in 2 sentences",
+            content: "Whats my name",
           },
         ],
       });
@@ -21,6 +26,13 @@ async function main() {
       console.log(`Prompt tokens: ${response.usage.prompt_tokens}`);
       console.log(`Completion tokens: ${response.usage.completion_tokens}`);
       console.log(`Total tokens used: ${response.usage.total_tokens}`);
+      console.log(
+        `Total Price`,
+        calculatePrice(
+          response.usage.prompt_tokens,
+          response.usage.completion_tokens,
+        ),
+      );
     }
 
     console.log(reply);
@@ -29,3 +41,13 @@ async function main() {
   }
 }
 main();
+
+function calculatePrice(prompt_tokens: number, completion_tokens: number) {
+  const promptPrice = (prompt_tokens / 1000000) * 0.15;
+  const completionPrice = (completion_tokens / 1000000) * 0.6;
+  return {
+    promptPrice,
+    completionPrice,
+    total: promptPrice + completionPrice,
+  };
+}
